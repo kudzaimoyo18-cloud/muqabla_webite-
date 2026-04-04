@@ -110,7 +110,7 @@ export default function EmployerDashboardPage() {
                 .select('full_name, avatar_url')
                 .eq('id', app.candidate_id)
                 .single();
-              return { ...app, candidate: candidateData, user: userData } as RecentApplicant;
+              return { ...app, candidate: candidateData, user: userData } as unknown as RecentApplicant;
             })
           );
           setRecentApplicants(enriched);

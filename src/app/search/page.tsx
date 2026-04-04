@@ -81,7 +81,7 @@ export default function SearchPage() {
     if (searchFilters.city) filterParams.city = searchFilters.city;
 
     const { data } = await searchJobs(filterParams);
-    setResults((data as JobResult[]) || []);
+    setResults((data as unknown as JobResult[]) || []);
     setLoading(false);
   }, []);
 

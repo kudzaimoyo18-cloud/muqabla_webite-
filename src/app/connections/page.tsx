@@ -66,7 +66,7 @@ export default function ConnectionsPage() {
               avatar_url: userData?.avatar_url,
               status: conn.status,
               created_at: conn.created_at,
-            } as Connection;
+            } as unknown as Connection;
           })
         );
         setConnections(enriched);

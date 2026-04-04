@@ -56,7 +56,7 @@ export default function NotificationsPage() {
         .order('created_at', { ascending: false })
         .limit(50);
 
-      setNotifications((data as Notification[]) || []);
+      setNotifications((data as unknown as Notification[]) || []);
       setLoading(false);
 
       // Mark all as read

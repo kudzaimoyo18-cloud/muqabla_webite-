@@ -106,7 +106,7 @@ export default function CandidatesPage() {
             country: cand?.country,
             ai_extracted_skills: cand?.ai_extracted_skills,
             profile_video_id: cand?.profile_video_id,
-          } as CandidateApplication;
+          } as unknown as CandidateApplication;
         })
       );
 
