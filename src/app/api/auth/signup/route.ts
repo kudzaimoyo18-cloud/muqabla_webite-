@@ -1,9 +1,34 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/admin';
+import { createClient } from '@supabase/supabase-js';
+
+function getAdminClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!url || !key) {
+    throw new Error(`Missing env vars: URL=${!!url}, KEY=${!!key}`);
+  }
+
+  return createClient(url, key, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
 
 export async function POST(request: Request) {
   try {
-    const { email, password, fullName, role } = await request.json();
+    const body = await request.text();
+    let email: string, password: string, fullName: string, role: string;
+
+    try {
+      const parsed = JSON.parse(body);
+      email = parsed.email;
+      password = parsed.password;
+      fullName = parsed.fullName;
+      role = parsed.role;
+    } catch (parseErr) {
+      console.error('JSON parse error:', parseErr, 'Body:', body.substring(0, 200));
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
 
     if (!email || !password || !fullName || !role) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -13,8 +38,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
     }
 
+    const admin = getAdminClient();
+
     // 1. Create auth user with auto-confirm (bypasses email confirmation & rate limits)
-    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
+    const { data: authData, error: authError } = await admin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -22,13 +49,14 @@ export async function POST(request: Request) {
     });
 
     if (authError) {
+      console.error('Auth create error:', authError.message);
       return NextResponse.json({ error: authError.message }, { status: 400 });
     }
 
     const userId = authData.user.id;
 
     // 2. Create public.users profile
-    const { error: userError } = await supabaseAdmin
+    const { error: userError } = await admin
       .from('users')
       .insert({
         id: userId,
@@ -41,14 +69,14 @@ export async function POST(request: Request) {
       });
 
     if (userError) {
-      // Cleanup: delete the auth user if profile creation fails
-      await supabaseAdmin.auth.admin.deleteUser(userId);
+      console.error('User profile error:', userError.message);
+      await admin.auth.admin.deleteUser(userId);
       return NextResponse.json({ error: userError.message }, { status: 500 });
     }
 
     // 3. Create role-specific profile
     if (role === 'candidate') {
-      const { error: candError } = await supabaseAdmin
+      const { error: candError } = await admin
         .from('candidates')
         .insert({
           id: userId,
@@ -63,16 +91,15 @@ export async function POST(request: Request) {
         });
 
       if (candError) {
-        console.error('Candidate profile error:', candError);
+        console.error('Candidate profile error:', candError.message);
       }
     } else {
-      // Create a default company for the employer
       const slug = fullName
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
-      const { data: company, error: compError } = await supabaseAdmin
+      const { data: company, error: compError } = await admin
         .from('companies')
         .insert({
           name: `${fullName}'s Company`,
@@ -86,7 +113,7 @@ export async function POST(request: Request) {
         .single();
 
       if (!compError && company) {
-        const { error: empError } = await supabaseAdmin
+        const { error: empError } = await admin
           .from('employers')
           .insert({
             id: userId,
@@ -97,10 +124,10 @@ export async function POST(request: Request) {
           });
 
         if (empError) {
-          console.error('Employer profile error:', empError);
+          console.error('Employer profile error:', empError.message);
         }
       } else {
-        console.error('Company creation error:', compError);
+        console.error('Company creation error:', compError?.message);
       }
     }
 
@@ -110,8 +137,8 @@ export async function POST(request: Request) {
       role,
       message: 'Account created successfully',
     });
-  } catch (error) {
-    console.error('Signup error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Signup error:', error?.message || error);
+    return NextResponse.json({ error: error?.message || 'Internal server error' }, { status: 500 });
   }
 }
