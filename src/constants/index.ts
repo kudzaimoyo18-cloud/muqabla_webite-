@@ -1,3 +1,5 @@
+import type { Country, City, Industry, ExperienceLevel, CompanySize } from '@/types';
+
 export const countries: Country[] = [
   { code: 'AE', name: 'United Arab Emirates', name_ar: 'الإمارات العربية المتحدة' },
   { code: 'SA', name: 'Saudi Arabia', name_ar: 'السعودية' },
