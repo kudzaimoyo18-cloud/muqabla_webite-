@@ -47,11 +47,7 @@ export default function SignupPage() {
 
       if (signInError) throw signInError;
 
-      if (role === 'candidate') {
-        router.push('/profile?setup=true');
-      } else {
-        router.push('/employer/dashboard?setup=true');
-      }
+      router.push('/profile?setup=true');
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
     } finally {

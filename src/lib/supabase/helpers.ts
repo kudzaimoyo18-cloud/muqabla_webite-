@@ -132,6 +132,10 @@ export async function createEmployerProfile(userId: string, companyId: string, p
     .single();
 }
 
+export async function updateCompanyProfile(companyId: string, updates: Record<string, unknown>) {
+  return supabase.from('companies').update(updates).eq('id', companyId).select().single();
+}
+
 // ============ JOB HELPERS ============
 
 export async function getJobsFeed(cursor?: string, limit = 10) {
