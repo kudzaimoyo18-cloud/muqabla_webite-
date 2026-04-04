@@ -1,31 +1,31 @@
-import './globals.css'
-import { AuthProvider } from '@/providers/auth-provider'
-import { Toaster } from '@/components/ui/toaster'
-import { ThemeProvider } from '@/providers/theme-provider'
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
+
+export const metadata: Metadata = {
+  title: 'Muqabla - Your Video is Your Resume',
+  description: 'AI-powered video interview platform for the GCC region. Record once, apply everywhere.',
+  keywords: ['jobs', 'video interview', 'GCC', 'UAE', 'Saudi Arabia', 'hiring'],
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#0a0a0a',
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Muqabla - Your Video is Your Resume</title>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
-      <body>
-        <ThemeProvider>
-          <AuthProvider>
-            <div className="min-h-screen bg-background">
-              {children}
-            </div>
-            <Toaster />
-          </AuthProvider>
-        </ThemeProvider>
+    <html lang="en" className={inter.variable}>
+      <body className="bg-[#0a0a0a] text-white antialiased">
+        {children}
       </body>
     </html>
-  )
+  );
 }
