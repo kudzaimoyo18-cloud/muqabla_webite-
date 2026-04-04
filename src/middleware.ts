@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
 
   if (!isProtected && !isAuthRoute) return NextResponse.next();
 
-  const supabase = createMiddlewareClient(request);
+  const { supabase, response } = createMiddlewareClient(request);
   const { data: { user } } = await supabase.auth.getUser();
 
   if (isProtected && !user) {
@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/feed', request.url));
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
