@@ -84,7 +84,7 @@ export default function CandidateDashboardPage() {
         shortlisted,
       });
 
-      setRecentApps(apps.slice(0, 5) as RecentApplication[]);
+      setRecentApps(apps.slice(0, 5) as unknown as RecentApplication[]);
       setLoading(false);
     }
 
