@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Video, Mail, Lock, User, ArrowRight, Loader2, Briefcase, UserCircle } from 'lucide-react';
-import { signUpWithEmail, createUserProfile } from '@/lib/supabase/helpers';
+import { signUpWithEmail, createUserProfile, createCandidateProfile, createCompany, createEmployerProfile } from '@/lib/supabase/helpers';
 import { supabase } from '@/lib/supabase/client';
 
 type Step = 'details' | 'role';
@@ -48,8 +48,16 @@ export default function SignupPage() {
       if (profileError) throw profileError;
 
       if (role === 'candidate') {
+        // Create candidate row so profile page can load/update it
+        const { error: candError } = await createCandidateProfile(userId, {});
+        if (candError) throw candError;
         router.push('/profile?setup=true');
       } else {
+        // Create a default company and employer row
+        const { data: company, error: compError } = await createCompany({ name: `${fullName}'s Company` });
+        if (compError) throw compError;
+        const { error: empError } = await createEmployerProfile(userId, company.id, {});
+        if (empError) throw empError;
         router.push('/employer/dashboard?setup=true');
       }
     } catch (err: any) {

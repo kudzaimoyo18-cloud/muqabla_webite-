@@ -118,18 +118,16 @@ function ProfileContent() {
 
     setUploading(true);
     try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ maxDurationSeconds: 60 }),
-      });
-      const { uploadURL, uid } = await res.json();
+      const res = await fetch('/api/upload', { method: 'POST' });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      const { uploadUrl, videoId } = data;
 
       const formData = new FormData();
       formData.append('file', file);
-      await fetch(uploadURL, { method: 'POST', body: formData });
+      await fetch(uploadUrl, { method: 'POST', body: formData });
 
-      await updateCandidateProfile(user.id, { profile_video_id: uid });
+      await updateCandidateProfile(user.id, { profile_video_id: videoId });
       await loadProfile();
     } catch {
       // Upload failed silently

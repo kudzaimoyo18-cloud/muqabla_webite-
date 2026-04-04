@@ -38,14 +38,14 @@ export default function ConnectionsPage() {
       const { data: conns } = await supabase
         .from('connections')
         .select('*')
-        .or(`requester_id.eq.${user!.id},receiver_id.eq.${user!.id}`)
+        .or(`user_id.eq.${user!.id},connected_user_id.eq.${user!.id}`)
         .eq('status', 'accepted')
         .order('created_at', { ascending: false });
 
       if (conns) {
         const enriched = await Promise.all(
           conns.map(async (conn) => {
-            const otherId = conn.requester_id === user!.id ? conn.receiver_id : conn.requester_id;
+            const otherId = conn.user_id === user!.id ? conn.connected_user_id : conn.user_id;
             const { data: userData } = await supabase
               .from('users')
               .select('full_name, avatar_url')

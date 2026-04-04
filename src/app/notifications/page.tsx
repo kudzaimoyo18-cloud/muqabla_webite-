@@ -118,7 +118,7 @@ export default function NotificationsPage() {
                     <p className={`text-sm ${!notif.is_read ? 'font-semibold text-white' : 'font-medium text-gray-300'}`}>
                       {notif.title}
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">{notif.body}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{notif.message}</p>
                     <p className="text-[10px] text-gray-600 mt-1">{timeAgo(notif.created_at)}</p>
                   </div>
                   {!notif.is_read && (
