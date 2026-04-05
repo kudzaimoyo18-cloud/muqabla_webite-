@@ -88,12 +88,8 @@ export default function FeedPage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goToNext, goToPrev, handleApply, handleSave]);
 
-  if (!isAuthenticated && !authLoading) {
-    router.push('/auth/login?redirect=/feed');
-    return null;
-  }
-
-  if ((isLoading || authLoading) && jobs.length === 0) {
+  // Middleware already protects this route — show loading while auth initializes
+  if ((isLoading || authLoading || !isAuthenticated) && jobs.length === 0) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <div className="text-center">

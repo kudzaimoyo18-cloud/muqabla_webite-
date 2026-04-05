@@ -130,12 +130,7 @@ export default function EmployerDashboardPage() {
     loadDashboard();
   }, [isAuthenticated, user?.id]);
 
-  if (!isAuthenticated && !authLoading) {
-    router.push('/auth/login?redirect=/employer/dashboard');
-    return null;
-  }
-
-  if (loading || authLoading) {
+  if (loading || authLoading || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />

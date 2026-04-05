@@ -132,9 +132,12 @@ export default function PostJobPage() {
     }
   };
 
-  if (!isAuthenticated && !authLoading) {
-    router.push('/auth/login?redirect=/employer/post-job');
-    return null;
+  if (authLoading || !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
+      </div>
+    );
   }
 
   return (

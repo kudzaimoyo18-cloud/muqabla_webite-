@@ -48,7 +48,25 @@
       "mcp__d0594e74-5c20-443c-bd9a-3a28d28e5155__list_tables",
       "mcp__c5437a07-2b78-43b1-917d-6c909dcee4eb__search_cloudflare_documentation",
       "mcp__d0594e74-5c20-443c-bd9a-3a28d28e5155__list_projects",
-      "Bash(vercel --prod --yes)"
+      "Bash(vercel --prod --yes)",
+      "Bash(rm -f src/providers/auth-provider.tsx src/providers/theme-provider.tsx src/app/root.tsx src/app/protected-layout.tsx src/app/tabs/layout.tsx)",
+      "Bash(rm -rf src/app/tabs src/app/auth/register src/app/job src/app/api/jobs src/app/api/applications src/app/api/video-upload src/components/job src/components/application src/components/video src/components/layout src/hooks src/providers)",
+      "mcp__5340c44b-50f2-40fc-8318-65ece2e6e7ac__list_teams",
+      "mcp__5340c44b-50f2-40fc-8318-65ece2e6e7ac__get_runtime_logs",
+      "Bash(ls .env*)",
+      "Bash(grep -E ^[A-Z_]+= .env.local)",
+      "Bash(grep -E ^[A-Z_]+= .env)",
+      "mcp__d0594e74-5c20-443c-bd9a-3a28d28e5155__get_project",
+      "mcp__d0594e74-5c20-443c-bd9a-3a28d28e5155__get_publishable_keys",
+      "mcp__5340c44b-50f2-40fc-8318-65ece2e6e7ac__get_project",
+      "mcp__d0594e74-5c20-443c-bd9a-3a28d28e5155__search_docs",
+      "Bash(timeout 10)",
+      "Bash(xargs ls:*)",
+      "Bash(xargs grep:*)",
+      "Bash(find /c/interview/muqabla/src -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))",
+      "Bash(find /c/interview/muqabla -type f \\\\\\(-name *.sql -o -name *.env* \\\\\\))",
+      "Bash(grep -r \"CORS\\\\|cors\\\\|cors\\(\" /c/interview/muqabla/src --include=*.ts --include=*.tsx)",
+      "Bash(where gh:*)"
     ]
   }
 }
